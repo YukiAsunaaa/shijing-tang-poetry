@@ -8,7 +8,7 @@
     "dev": "vite --host 127.0.0.1",
     "build": "vite build",
     "preview": "vite preview --host 127.0.0.1",
-    "test": "node tests/data.test.mjs"
+    "test": "node tests/data.test.mjs && node tests/analysis.test.mjs"
   },
   "dependencies": {
     "@fontsource/noto-serif-sc": "^5.2.8",

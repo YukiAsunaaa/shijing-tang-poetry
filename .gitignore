@@ -4,3 +4,4 @@ dist/
 test-results/
 .review/
 __pycache__/
+.venv-analysis/

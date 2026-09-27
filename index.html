@@ -5,16 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#f5f5f0" />
     <meta name="description" content="在山水、花木、四时与天色之间，读懂全唐诗的意象。诗境，以水墨与数据重新遇见唐诗。" />
-    <title>诗境 · 全唐诗意象图谱</title>
+    <title>诗境 · 全唐诗文本图谱</title>
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
   </head>
   <body>
-    <a class="skip" href="#chart">跳至意象图谱</a>
+    <a class="skip" href="#chart">跳至主要内容</a>
     <header class="masthead">
-      <a class="brand" href="#" aria-label="诗境首页"><span class="seal" aria-hidden="true">唐</span><h1>诗境</h1><span class="brand-sub">全唐诗意象图谱</span></a>
+      <a class="brand" href="#" aria-label="诗境首页"><span class="seal" aria-hidden="true">唐</span><h1>诗境</h1><span class="brand-sub">全唐诗文本图谱</span></a>
       <div class="header-actions"><span class="edition">万物有意，落笔成诗</span><button id="motion" class="icon-button" aria-label="暂停动态" title="暂停动态" aria-pressed="false"><i data-lucide="pause"></i></button><a class="icon-button" href="#method" aria-label="数据与统计说明" title="数据与统计说明"><i data-lucide="info"></i></a></div>
     </header>
+    <nav class="view-tabs" aria-label="分析视图" role="tablist">
+      <button role="tab" aria-selected="true" aria-controls="imagery-view" data-view="imagery"><span>意象图谱</span><small>物候与文字</small></button>
+      <button role="tab" aria-selected="false" aria-controls="emotion-view" data-view="emotion"><span>诗人情感</span><small>表达倾向</small></button>
+      <button role="tab" aria-selected="false" aria-controls="cluster-view" data-view="cluster"><span>诗人聚类</span><small>用词相近</small></button>
+    </nav>
     <main>
+      <div id="imagery-view" class="view-panel" data-view-panel="imagery" role="tabpanel">
       <section class="world" data-world="seasons" aria-label="唐诗意象探索">
         <div class="scenery" aria-hidden="true"><img class="landscape-art" src="./assets/landscape.jpg" alt="" /><img class="flower-art" src="./assets/blossom.jpg" alt="" /><div class="sky-disc"></div><canvas id="atmosphere"></canvas></div>
         <div class="world-content">
@@ -43,8 +49,48 @@
         <article class="poem"><blockquote id="quote"></blockquote><div class="poem-byline"><p id="poem-source"></p><button id="expand-poem" aria-expanded="false" aria-controls="poem-full">读全诗 <i data-lucide="arrow-down"></i></button></div><div id="poem-full" hidden><h3 id="full-title"></h3><p id="full-body"></p><p id="source-id"></p></div></article>
       </section>
       <section class="method-section" id="method"><details><summary><span>关于这卷诗与数据</span><i data-lucide="plus"></i></summary><div class="method-content"><div><h3>数据从何而来</h3><p id="corpus-stats"></p><p>来源为训练营提供的《全唐诗.txt》。保留原文件篇目边界与文字；组诗按一条篇目记录处理，不拆分成独立诗首。</p></div><div><h3>如何计数</h3><p id="method-text"></p><p>同一字的语义可能不同。这是一份字面意象频次图谱，不是经过人工逐句标注的语义结论。诗句区每个意象选取最多 30 条原文示例，优先展示较短篇目。</p></div></div></details></section>
+      </div>
+
+      <section id="emotion-view" class="view-panel research-view" data-view-panel="emotion" role="tabpanel" hidden aria-labelledby="emotion-title">
+        <div class="research-backdrop" aria-hidden="true"></div>
+        <header class="research-intro">
+          <div><h2 id="emotion-title">诗人情感</h2><p>词语如何在一位诗人的作品中反复回响</p></div>
+          <p class="research-note">表达倾向 · 每万字词频</p>
+        </header>
+        <div class="research-grid">
+          <aside class="research-controls">
+            <label for="poet-search">选择诗人</label>
+            <div class="search-box"><i data-lucide="search"></i><input id="poet-search" type="search" placeholder="输入诗人姓名" autocomplete="off" /></div>
+            <div id="poet-list" class="poet-list" role="listbox" aria-label="诗人列表"></div>
+          </aside>
+          <div class="emotion-stage">
+            <div class="stage-heading"><div><h3 id="emotion-poet">正在读取诗卷</h3><p id="emotion-sample"></p></div><button id="emotion-download" class="icon-button" aria-label="下载诗人情感数据" title="下载诗人情感数据"><i data-lucide="download"></i></button></div>
+            <div class="emotion-visual"><div id="emotion-radar" aria-label="情感表达倾向图"></div><div id="emotion-ranks" class="emotion-ranks"></div></div>
+            <div class="emotion-evidence" aria-live="polite">
+              <div><span id="emotion-name">—</span><p id="emotion-score"></p></div>
+              <div><h4>高频证据词</h4><div id="emotion-terms" class="term-stream"></div></div>
+              <blockquote id="emotion-quote"></blockquote>
+            </div>
+          </div>
+        </div>
+        <div class="research-method"><details><summary><span>情感分析方法与限制</span><i data-lucide="plus"></i></summary><p id="emotion-method"></p><p>分类之间允许重叠，例如“醉”可能同时进入喜悦与旷达。作品不足 20 条的作者不进入比较，避免极小样本造成误导。雷达图各轴以该类得分的第 95 百分位作为满刻度，便于比较轮廓；准确数值以右侧列表为准。</p></details></div>
+      </section>
+
+      <section id="cluster-view" class="view-panel research-view cluster-view" data-view-panel="cluster" role="tabpanel" hidden aria-labelledby="cluster-title">
+        <div class="research-backdrop" aria-hidden="true"></div>
+        <header class="research-intro">
+          <div><h2 id="cluster-title">诗人聚类</h2><p>从用词习惯，看见诗人之间的远近</p></div>
+          <p class="research-note">TF-IDF · K-means · 二维降维</p>
+        </header>
+        <div class="cluster-toolbar"><div id="cluster-legend" class="cluster-legend" aria-label="聚类筛选"></div><label class="search-box cluster-search"><i data-lucide="search"></i><input id="cluster-search" type="search" placeholder="定位诗人" autocomplete="off" /></label></div>
+        <div class="cluster-layout">
+          <div id="cluster-chart" class="cluster-chart" tabindex="0" aria-label="诗人用词聚类散点图"></div>
+          <aside class="poet-detail" aria-live="polite"><span class="detail-seal" aria-hidden="true">词</span><h3 id="cluster-poet">选择一个诗人</h3><p id="cluster-meta">点击散点，查看其代表用词。</p><div><h4>代表用词</h4><div id="cluster-terms" class="term-stream"></div></div><div><h4>所属词群</h4><p id="cluster-group">—</p></div><div><h4>主要表达倾向</h4><p id="cluster-emotion">—</p></div></aside>
+        </div>
+        <div class="research-method"><details><summary><span>聚类方法与限制</span><i data-lucide="plus"></i></summary><p id="cluster-method"></p><p>散点位置只表示在二维投影中的相对用词距离；词群名称直接取自该组中心权重最高的词，不等同于文学流派、关系或成就评价。</p></details></div>
+      </section>
     </main>
-    <footer><span>诗境 <span class="footer-dot">·</span> 全唐诗意象图谱</span><span>字有尽，而意无穷。</span></footer>
+    <footer><span>诗境 <span class="footer-dot">·</span> 全唐诗文本图谱</span><span>字有尽，而意无穷。</span></footer>
     <div id="toast" role="status" aria-live="polite"></div>
     <script type="module" src="/src/main.js"></script>
   </body>

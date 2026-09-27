@@ -1,5 +1,5 @@
 ---
-name: "诗境 · 全唐诗意象图谱"
+name: "诗境 · 全唐诗文本图谱"
 description: "Classical Chinese ink wash, modern interaction."
 colors:
   paper: "#f5f5f0"
@@ -91,7 +91,7 @@ components:
 
 **Creative North Star: "Classical Chinese ink wash, modern interaction."**
 
-Approved visual world: classical Chinese ink wash, modern interaction. Code-led implementation; no approved image comp. Original raster painting supplies the landscape, never decorative SVG scenery. Main surface mode: Experience with an analytical Operate area and Read poem area.
+Approved visual world: classical Chinese ink wash, modern interaction. Code-led implementation; no approved image comp. Original raster painting supplies the landscape, never decorative SVG scenery. Three top-level views share one quiet research shell: imagery atlas, poet emotion, and poet clustering.
 
 Key characteristics: sparse rules, unframed continuous landscape, no nested cards; legible analytical controls; linked chart and poetry states. This final specification records `src/style.css`, `src/main.js`, and `index.html`.
 
@@ -109,7 +109,7 @@ Poem heading is 20px, then 17px mobile. Quote is 25px/1.85, then 20px/1.9; full 
 
 ## Layout
 
-Desktop: compact masthead, broad canvas with left category navigation and right D3 bars, next section visible; poem strip beneath. Mobile: horizontal categories, shorter scene title, full-width chart, stacked poem section. Controls stay legible over calm paper. Full poem shown inline.
+Desktop: compact masthead, a three-tab research switcher, and broad analytical canvases. The imagery view keeps left category navigation beside D3 bars with the poem strip beneath; the emotion view pairs a searchable poet rail with radar, normalized scores, and textual evidence; the cluster view pairs a full-width scatterplot with selected-poet detail. Mobile stacks every view and preserves horizontal category navigation. Controls stay legible over calm paper. The imagery rail sits on a near-opaque rice-paper layer so artwork never competes with its labels.
 
 Masthead: max-width 1600px, minimum height 93px, padding 20px 56px. Scene and poem inner layouts: max-width 1488px, grid columns 29% and remainder, gap 8%, horizontal padding 64px. Scene padding is 46px 64px 32px with minimum height 650px. Chapter max-width is 280px. Poem strip padding is 42px 64px 38px, minimum height 215px. Methodology max-width is 1360px and its expanded content uses two columns with a 64px gap.
 
@@ -140,6 +140,10 @@ Metric buttons use `aria-pressed`, a shared baseline, 24px gap (18px mobile), an
 ### Chart and Reading
 
 Chart rows support pointer and Enter/Space activation, accessible labels, and pressed states. Selected labels, values, and bars use vermilion. Focus outlines the transparent hit rectangle. The selected-word insight and chart summary provide live feedback. Poetry is unframed, with matched words highlighted in vermilion without fill. Full-poem toggle maintains `aria-expanded` and `aria-controls` and expands inline beneath a rule. Methodology uses native details/summary with a plus icon rotated 45 degrees when open. Download completion uses a live-status toast for 2500ms; loading and retry states occupy the chart.
+
+### Research Views
+
+The top tablist is a compact text control with small descriptive subtitles and keyboard arrow navigation. Emotion uses a hexagonal D3 radar beside six exact normalized values; selecting an axis or value updates lexicon evidence and a representative source excerpt. Clustering uses colored D3 points, direct labels only for the largest or selected authors, cluster filters, search, and a separate detail area. Both advanced views disclose sample thresholds, calculations, and interpretive limits inline.
 
 ### Focus and Motion
 

@@ -24,10 +24,21 @@ for(const [name,width,height] of [['desktop',1440,1000],['mobile',390,844]]){
   await page.locator('#expand-poem').click();assert.equal(await page.locator('#poem-full').isVisible(),true);
   const before=await page.locator('#poem-source').textContent();await page.locator('#next-poem').click();assert.notEqual(await page.locator('#poem-source').textContent(),before);
   const download=page.waitForEvent('download');await page.locator('#download').click();assert.ok((await download).suggestedFilename().endsWith('.csv'));
+  await page.waitForFunction(()=>!document.querySelector('#toast')?.classList.contains('visible'));
   await page.locator('#motion').click();assert.equal(await page.locator('#motion').getAttribute('aria-pressed'),'true');
   const a=await page.locator('canvas').evaluate(c=>c.toDataURL());await page.waitForTimeout(120);const b=await page.locator('canvas').evaluate(c=>c.toDataURL());assert.equal(a,b);
   await page.locator('#motion').click();await page.waitForTimeout(120);const c=await page.locator('canvas').evaluate(c=>c.toDataURL());assert.notEqual(a,c);
-  await page.locator('summary').click();assert.ok(await page.locator('#method-text').isVisible());
+  await page.locator('#method summary').click();assert.ok(await page.locator('#method-text').isVisible());
+  await page.locator('[data-view="emotion"]').click();await page.waitForSelector('.radar-shape');await page.waitForTimeout(700);
+  assert.ok(await page.locator('#poet-list button').count()>100);
+  await page.locator('#poet-search').fill('李白');await page.locator('#poet-list button').first().click();
+  assert.equal(await page.locator('#emotion-poet').textContent(),'李白');assert.equal(await page.locator('.emotion-rank').count(),6);
+  await page.locator('.radar-node').nth(1).click();assert.match(await page.locator('#emotion-quote').textContent(),/李白/);
+  await page.screenshot({path:`.review/${name}-emotion.png`,fullPage:true});
+  await page.locator('[data-view="cluster"]').click();await page.waitForSelector('.poet-point');await page.waitForTimeout(700);
+  assert.ok(await page.locator('.poet-point').count()>100);await page.locator('#cluster-search').fill('杜甫');
+  assert.equal(await page.locator('#cluster-poet').textContent(),'杜甫');
+  await page.screenshot({path:`.review/${name}-cluster.png`,fullPage:true});
   assert.deepEqual(errors,[]);
   report.push({name,width,passed:true});await page.close();
 }

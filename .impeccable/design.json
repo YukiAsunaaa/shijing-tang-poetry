@@ -62,10 +62,10 @@
   ],
   "narrative": {
     "northStar": "Classical Chinese ink wash, modern interaction.",
-    "overview": "Approved visual world: classical Chinese ink wash, modern interaction. Code-led implementation; no approved image comp. Original raster painting supplies the landscape, never decorative SVG scenery. Main surface mode: Experience with an analytical Operate area and Read poem area.",
-    "keyCharacteristics": ["Sparse rules and continuous unframed landscape", "Serif poetry with system-sans controls", "Linked chart, selected word, scene, and reading states"],
+    "overview": "Approved visual world: classical Chinese ink wash, modern interaction. Code-led implementation; no approved image comp. Three top-level research views share one quiet shell: imagery atlas, poet emotion, and poet clustering. The imagery navigation has its own near-opaque rice-paper layer for reliable contrast over every scene.",
+    "keyCharacteristics": ["Sparse rules and continuous unframed landscape", "Serif poetry with system-sans controls", "Linked imagery, emotion evidence, and diction-cluster views"],
     "rules": [],
     "dos": ["Do preserve real raster artwork and vermilion selection.", "Do preserve mobile stacking, keyboard interaction, and reduced motion."],
-    "donts": ["Don't introduce nested cards, shadows, or decorative SVG scenery.", "Don't invent statistical meaning beyond literal counts."]
+    "donts": ["Don't introduce nested cards, shadows, or decorative SVG scenery.", "Don't present lexicon scores or dimensionality reduction as definitive literary judgment."]
   }
 }

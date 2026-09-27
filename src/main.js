@@ -1,8 +1,9 @@
 import * as d3 from 'd3';
-import {createIcons, Pause, Play, Info, Download, ArrowUpRight, ArrowDownWideNarrow, ArrowLeft, ArrowRight, ArrowDown, ArrowUp, Plus} from 'lucide';
+import {createIcons, Pause, Play, Info, Download, ArrowUpRight, ArrowDownWideNarrow, ArrowLeft, ArrowRight, ArrowDown, ArrowUp, Plus, Search} from 'lucide';
+import {initAdvancedAnalysis} from './advanced.js';
 import './style.css';
 
-const icons = {Pause, Play, Info, Download, ArrowUpRight, ArrowDownWideNarrow, ArrowLeft, ArrowRight, ArrowDown, ArrowUp, Plus};
+const icons = {Pause, Play, Info, Download, ArrowUpRight, ArrowDownWideNarrow, ArrowLeft, ArrowRight, ArrowDown, ArrowUp, Plus, Search};
 const $ = selector => document.querySelector(selector);
 const fmt = n => n.toLocaleString('zh-CN');
 const worlds = {
@@ -196,3 +197,4 @@ async function load(){
   }
 }
 load();
+initAdvancedAnalysis({icons, createIcons, notify, reduced, paused:()=>paused});
