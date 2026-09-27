@@ -12,7 +12,7 @@ assert.equal(new Set(await page.locator('.scene-art').evaluateAll(images=>images
 assert.equal(await page.title(),'诗境 · 全唐诗文本图谱');
 assert.equal(await page.locator('.bar-row').count(),4);
 assert.equal(await page.locator('#quote').textContent(),'春眠不觉晓，处处闻啼鸟。');
-assert.ok(await page.locator('.landscape-art').evaluate(img=>img.complete&&img.naturalWidth>100));
+assert.ok(await page.locator('.scene-art').evaluateAll(images=>images.every(image=>image.complete&&image.naturalWidth>100)));
 for(const id of ['plants','sky','colors','landscape','seasons']){
   await page.locator(`[data-category="${id}"]`).click();
 }
