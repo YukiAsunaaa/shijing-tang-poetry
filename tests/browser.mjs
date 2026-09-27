@@ -13,7 +13,13 @@ for(const [name,width,height] of [['desktop',1440,1000],['mobile',390,844]]){
   assert.equal(await page.locator('.bar-row').count(),4);
   await page.screenshot({path:`.review/${name}.png`,fullPage:true});
   for(const category of ['plants','landscape','sky','colors','seasons']){
-    await page.locator(`[data-category="${category}"]`).click();await page.waitForTimeout(950);
+    await page.locator(`[data-category="${category}"]`).click();
+    if(category==='plants'){
+      await page.waitForTimeout(350);
+      const visibleScenes=await page.locator('.scene-art').evaluateAll(images=>images.filter(image=>Number.parseFloat(getComputedStyle(image).opacity)>.02).length);
+      assert.ok(visibleScenes>=2,`scene crossfade ${name}`);
+      await page.waitForTimeout(650);
+    }else await page.waitForTimeout(1000);
     assert.ok(await page.locator(`[data-scene="${category}"]`).evaluate(image=>image.classList.contains('is-active')&&image.complete&&image.naturalWidth>100));
     assert.equal(await page.locator('.world').getAttribute('data-world'),category);
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,`overflow ${name} ${category}`);

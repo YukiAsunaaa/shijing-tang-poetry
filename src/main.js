@@ -35,7 +35,7 @@ function notify(text) {
 function activeTerm() { return category.items.find(d => d.name === term); }
 function duration() { return paused || reduced.matches ? 0 : 700; }
 
-function transitionScene(id,outgoingOpacity) {
+function transitionScene(id) {
   const next = document.querySelector(`[data-scene="${id}"]`);
   const current = document.querySelector('.scene-art.is-active');
   if (!next) return;
@@ -44,31 +44,11 @@ function transitionScene(id,outgoingOpacity) {
   if (current !== next) {
     current?.classList.remove('is-active');
     next.classList.add('is-active');
-    const targetOpacity=Number.parseFloat(getComputedStyle(next).opacity)||.5;
-    if (duration()) {
-      current?.animate([
-        {opacity:outgoingOpacity,filter:'blur(0)',clipPath:'inset(0 0 0 0)'},
-        {opacity:0,filter:'blur(5px)',clipPath:'inset(0 0 0 18%)'}
-      ],{duration:420,easing:'cubic-bezier(.4,0,1,1)'});
-      next.animate([
-        {opacity:0,filter:'blur(9px)',clipPath:'inset(0 100% 0 0)'},
-        {opacity:targetOpacity*.72,filter:'blur(2px)',clipPath:'inset(0 12% 0 0)',offset:.58},
-        {opacity:targetOpacity,filter:'blur(0)',clipPath:'inset(0 0 0 0)'}
-      ],{duration:880,easing:'cubic-bezier(.16,1,.3,1)'});
-    }
-  } else if (duration()) {
-    const targetOpacity=Number.parseFloat(getComputedStyle(next).opacity)||.5;
-    next.animate([
-      {filter:'blur(0)',opacity:targetOpacity},
-      {filter:'blur(2px)',opacity:targetOpacity*.78,offset:.32},
-      {filter:'blur(0)',opacity:targetOpacity}
-    ],{duration:620,easing:'cubic-bezier(.16,1,.3,1)'});
   }
 }
 
 function updateScene() {
   const world = $('.world');
-  const outgoingOpacity=Number.parseFloat(getComputedStyle(document.querySelector('.scene-art.is-active')).opacity)||.5;
   world.dataset.world = category.id;
   world.dataset.season = category.id === 'seasons' ? term : '';
   world.dataset.sky = category.id === 'sky' ? term : '';
@@ -76,7 +56,7 @@ function updateScene() {
   document.documentElement.style.setProperty('--accent', category.id === 'colors' ? colorMap[term] : worlds[category.id].accent);
   document.documentElement.style.setProperty('--scene-pigment', colorMap[term] || worlds[category.id].accent);
   world.style.setProperty('--color-paper', d3.interpolateRgb('#f5f5f0', colorMap[term] || '#f5f5f0')(.08));
-  transitionScene(category.id,outgoingOpacity);
+  transitionScene(category.id);
   updateAtmosphere();
 }
 

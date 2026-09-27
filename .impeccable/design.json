@@ -18,7 +18,7 @@
       {"name": "chart", "value": "700ms d3.easeCubicInOut", "purpose": "Keyed bar positions, widths, and numerical interpolation; zero when paused or reduced."},
       {"name": "poem", "value": "430ms ease-out", "purpose": "Opacity 0.45 to 1 and translateY 6px to 0."},
       {"name": "scene", "value": "800ms", "purpose": "Scene background."},
-      {"name": "sceneReveal", "value": "880ms cubic-bezier(.16,1,.3,1)", "purpose": "Clipped ink-wash reveal between five category paintings; exit is 420ms."},
+      {"name": "sceneReveal", "value": "opacity 1s, transform 1.4s, filter 1s", "purpose": "Quiet crossfade between five category paintings with restrained crop and tonal interpolation."},
       {"name": "emotionMorph", "value": "620-680ms d3.easeCubicOut", "purpose": "Preserve radar, frequency-row, and number identity across poet selection."},
       {"name": "artwork", "value": "opacity 1s, transform 1.4s, filter 1s", "purpose": "Raster scene changes."},
       {"name": "control", "value": "200ms", "purpose": "Icon-button hover."},
