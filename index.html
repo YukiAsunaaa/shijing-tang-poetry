@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f5f5f0" />
+    <meta name="description" content="在山水、花木、四时与天色之间，读懂全唐诗的意象。诗境，以水墨与数据重新遇见唐诗。" />
+    <title>诗境 · 全唐诗意象图谱</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <a class="skip" href="#chart">跳至意象图谱</a>
+    <header class="masthead">
+      <a class="brand" href="#" aria-label="诗境首页"><span class="seal" aria-hidden="true">唐</span><h1>诗境</h1><span class="brand-sub">全唐诗意象图谱</span></a>
+      <div class="header-actions"><span class="edition">万物有意，落笔成诗</span><button id="motion" class="icon-button" aria-label="暂停动态" title="暂停动态" aria-pressed="false"><i data-lucide="pause"></i></button><a class="icon-button" href="#method" aria-label="数据与统计说明" title="数据与统计说明"><i data-lucide="info"></i></a></div>
+    </header>
+    <main>
+      <section class="world" data-world="seasons" aria-label="唐诗意象探索">
+        <div class="scenery" aria-hidden="true"><img class="landscape-art" src="./assets/landscape.jpg" alt="" /><img class="flower-art" src="./assets/blossom.jpg" alt="" /><div class="sky-disc"></div><canvas id="atmosphere"></canvas></div>
+        <div class="world-content">
+          <aside class="chapter">
+            <div class="chapter-heading"><h2 id="world-title">四时</h2><p id="world-verse">春生夏长<br />秋收冬藏</p></div>
+            <nav id="categories" aria-label="意象分类">
+              <button data-category="seasons" aria-pressed="true"><span>四时</span><small>春 · 夏 · 秋 · 冬</small><i data-lucide="arrow-up-right"></i></button>
+              <button data-category="plants" aria-pressed="false"><span>花木</span><small>一草一木，皆可入诗</small><i data-lucide="arrow-up-right"></i></button>
+              <button data-category="landscape" aria-pressed="false"><span>山水</span><small>山川有灵，江海有声</small><i data-lucide="arrow-up-right"></i></button>
+              <button data-category="sky" aria-pressed="false"><span>天象</span><small>抬头看见，千年月色</small><i data-lucide="arrow-up-right"></i></button>
+              <button data-category="colors" aria-pressed="false"><span>色彩</span><small>字里行间，自有丹青</small><i data-lucide="arrow-up-right"></i></button>
+            </nav>
+            <div class="chapter-foot"><span class="tiny-seal">诗</span><p>天地之间<br />皆是诗心所向</p></div>
+          </aside>
+          <div class="analysis">
+            <div class="analysis-head"><div><h2 id="chart-title">四时入诗</h2><p id="chart-caption">《全唐诗》正文中的意象频次</p></div><button id="download" class="icon-button" aria-label="下载当前分类数据" title="下载当前分类数据"><i data-lucide="download"></i></button></div>
+            <div class="chart-toolbar"><div class="segmented" role="group" aria-label="统计口径"><button data-metric="count" aria-pressed="true">出现次数</button><button data-metric="poems" aria-pressed="false">涉及篇目</button></div><label class="sort-control"><i data-lucide="arrow-down-wide-narrow"></i><select id="sort" aria-label="排序方式"><option value="desc">由多到少</option><option value="asc">由少到多</option></select></label></div>
+            <div id="chart" class="chart" tabindex="-1"><p class="loading" role="status">正在展开诗卷…</p></div>
+            <div class="chart-foot"><span id="chart-summary" aria-live="polite"></span><span>正文逐字统计</span></div>
+            <div class="selected-insight" aria-live="polite"><span id="selected-glyph">春</span><p id="insight-text"></p><span class="selected-decoration" aria-hidden="true">入诗</span></div>
+          </div>
+        </div>
+      </section>
+      <section class="poetry-section" aria-labelledby="poetry-heading">
+        <div class="poetry-label"><h2 id="poetry-heading">诗中寻春</h2><p id="poem-counter"></p><div class="poem-navigation"><button id="prev-poem" class="icon-button" aria-label="上一首" title="上一首"><i data-lucide="arrow-left"></i></button><button id="next-poem" class="icon-button" aria-label="下一首" title="下一首"><i data-lucide="arrow-right"></i></button></div></div>
+        <article class="poem"><blockquote id="quote"></blockquote><div class="poem-byline"><p id="poem-source"></p><button id="expand-poem" aria-expanded="false" aria-controls="poem-full">读全诗 <i data-lucide="arrow-down"></i></button></div><div id="poem-full" hidden><h3 id="full-title"></h3><p id="full-body"></p><p id="source-id"></p></div></article>
+      </section>
+      <section class="method-section" id="method"><details><summary><span>关于这卷诗与数据</span><i data-lucide="plus"></i></summary><div class="method-content"><div><h3>数据从何而来</h3><p id="corpus-stats"></p><p>来源为训练营提供的《全唐诗.txt》。保留原文件篇目边界与文字；组诗按一条篇目记录处理，不拆分成独立诗首。</p></div><div><h3>如何计数</h3><p id="method-text"></p><p>同一字的语义可能不同。这是一份字面意象频次图谱，不是经过人工逐句标注的语义结论。诗句区每个意象选取最多 30 条原文示例，优先展示较短篇目。</p></div></div></details></section>
+    </main>
+    <footer><span>诗境 <span class="footer-dot">·</span> 全唐诗意象图谱</span><span>字有尽，而意无穷。</span></footer>
+    <div id="toast" role="status" aria-live="polite"></div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
