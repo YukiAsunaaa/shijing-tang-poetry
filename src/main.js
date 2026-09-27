@@ -35,18 +35,6 @@ function notify(text) {
 function activeTerm() { return category.items.find(d => d.name === term); }
 function duration() { return paused || reduced.matches ? 0 : 700; }
 
-function transitionScene(id) {
-  const next = document.querySelector(`[data-scene="${id}"]`);
-  const current = document.querySelector('.scene-art.is-active');
-  if (!next) return;
-  current?.getAnimations().forEach(animation=>animation.cancel());
-  if(current!==next) next.getAnimations().forEach(animation=>animation.cancel());
-  if (current !== next) {
-    current?.classList.remove('is-active');
-    next.classList.add('is-active');
-  }
-}
-
 function updateScene() {
   const world = $('.world');
   world.dataset.world = category.id;
@@ -56,7 +44,6 @@ function updateScene() {
   document.documentElement.style.setProperty('--accent', category.id === 'colors' ? colorMap[term] : worlds[category.id].accent);
   document.documentElement.style.setProperty('--scene-pigment', colorMap[term] || worlds[category.id].accent);
   world.style.setProperty('--color-paper', d3.interpolateRgb('#f5f5f0', colorMap[term] || '#f5f5f0')(.08));
-  transitionScene(category.id);
   updateAtmosphere();
 }
 
@@ -189,7 +176,7 @@ function drawAtmosphere(dt){
   }
 }
 function tick(now){if(paused||reduced.matches||document.hidden){frame=0;return;}const dt=lastTime?Math.min((now-lastTime)/1000,.05):.016;lastTime=now;drawAtmosphere(dt);frame=requestAnimationFrame(tick);}
-function updateAtmosphere(){cancelAnimationFrame(frame);frame=0;scenePulse=1;resizeCanvas();drawAtmosphere(0);if(!paused&&!reduced.matches&&!document.hidden){lastTime=0;frame=requestAnimationFrame(tick);}}
+function updateAtmosphere(){cancelAnimationFrame(frame);frame=0;scenePulse=0;resizeCanvas();drawAtmosphere(0);if(!paused&&!reduced.matches&&!document.hidden){lastTime=0;frame=requestAnimationFrame(tick);}}
 function syncMotion(){document.body.classList.toggle('motion-paused',paused||reduced.matches);if(paused||reduced.matches)document.getAnimations().forEach(animation=>{try{animation.finish();}catch{animation.cancel();}});$('#motion').setAttribute('aria-pressed',paused);$('#motion').setAttribute('aria-label',paused?'播放动态':'暂停动态');$('#motion').title=paused?'播放动态':'暂停动态';setIcon($('#motion'),paused?'play':'pause');updateAtmosphere();if(corpus)renderChart();document.dispatchEvent(new CustomEvent('poetry:motionchange',{detail:{paused:paused||reduced.matches}}));}
 $('#motion').addEventListener('click',()=>{paused=!paused;syncMotion();});
 reduced.addEventListener('change',()=>{paused=reduced.matches;syncMotion();});

@@ -20,13 +20,23 @@ for(const [name,width,height] of [['desktop',1440,1000],['mobile',390,844]]){
       assert.ok(visibleScenes>=2,`scene crossfade ${name}`);
       await page.waitForTimeout(650);
     }else await page.waitForTimeout(1000);
-    assert.ok(await page.locator(`[data-scene="${category}"]`).evaluate(image=>image.classList.contains('is-active')&&image.complete&&image.naturalWidth>100));
+    assert.ok(await page.locator(`[data-scene="${category}"]`).evaluate(image=>Number.parseFloat(getComputedStyle(image).opacity)>.1&&image.complete&&image.naturalWidth>100));
     assert.equal(await page.locator('.world').getAttribute('data-world'),category);
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,`overflow ${name} ${category}`);
     const first=page.locator('.bar-row').first();await first.focus();await page.keyboard.press('Enter');
     assert.ok((await page.locator('#quote mark').count())>0);
     if(category==='plants'||category==='sky') await page.screenshot({path:`.review/${name}-${category}.png`,fullPage:true});
   }
+  const rapidOpacity=[];
+  for(const category of ['plants','landscape','sky','colors']){
+    await page.locator(`[data-category="${category}"]`).click();
+    for(let sample=0;sample<3;sample++){
+      await page.waitForTimeout(32);
+      rapidOpacity.push(await page.locator('.scene-art').evaluateAll(images=>images.reduce((sum,image)=>sum+Number.parseFloat(getComputedStyle(image).opacity),0)));
+    }
+  }
+  assert.ok(Math.min(...rapidOpacity)>.1,`rapid scene continuity ${name}`);
+  await page.waitForTimeout(1000);
   await page.locator('[data-metric="poems"]').click();await page.locator('#sort').selectOption('asc');await page.waitForTimeout(750);
   const values=await page.locator('.value').allTextContents();assert.ok(values.every(t=>!Number.isNaN(Number(t.replaceAll(',','')))));
   await page.locator('#expand-poem').click();assert.equal(await page.locator('#poem-full').isVisible(),true);
