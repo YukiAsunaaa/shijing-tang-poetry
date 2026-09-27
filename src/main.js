@@ -58,7 +58,7 @@ function selectCategory(id, updateHash = true) {
 }
 
 function selectTerm(name) {
-  if (term === name) return;
+  if (term === name || !category.items.some(item => item.name === name)) return;
   term = name;
   poemIndex = 0;
   expanded = false;
@@ -78,14 +78,14 @@ function renderChart() {
   const t = svg.transition().duration(duration()).ease(d3.easeCubicInOut);
   svg.select('.axis').attr('transform',`translate(${left},${top-12})`).transition(t).call(d3.axisTop(x).ticks(width<430 ? 3 : 5).tickSize(-(height-top)).tickFormat(d3.format(',')));
   const rows = svg.select('.bars').selectAll('.bar-row').data(data,d=>d.name);
-  rows.exit().interrupt().transition().duration(duration()/3).style('opacity',0).remove();
+  rows.exit().attr('tabindex',-1).style('pointer-events','none').interrupt().transition().duration(duration()/3).style('opacity',0).remove();
   const enter = rows.enter().append('g').attr('class','bar-row').attr('role','button').attr('tabindex',0).attr('transform',d=>`translate(${left},${y(d.name)})`).style('opacity',0);
   enter.append('rect').attr('class','hit').attr('x',-left+1);
   enter.append('rect').attr('class','bar').attr('width',0);
   enter.append('text').attr('class','word').attr('x',-17).attr('text-anchor','middle').attr('dominant-baseline','middle');
   enter.append('text').attr('class','value').attr('x',8).attr('dominant-baseline','middle');
   const all = enter.merge(rows);
-  all.interrupt().attr('aria-label',d=>`${d.name}：${fmt(d[metric])}${metric==='count'?'次':'篇目'}，阅读相关诗句`).attr('aria-pressed',d=>d.name===term).classed('selected',d=>d.name===term)
+  all.interrupt().attr('tabindex',0).style('pointer-events',null).attr('aria-label',d=>`${d.name}：${fmt(d[metric])}${metric==='count'?'次':'篇目'}，阅读相关诗句`).attr('aria-pressed',d=>d.name===term).classed('selected',d=>d.name===term)
     .on('click',d=>selectTerm(d.name)).on('keydown',function(d){if(['Enter',' '].includes(d3.event.key)){d3.event.preventDefault();selectTerm(d.name);}});
   all.transition(t).style('opacity',1).attr('transform',d=>`translate(${left},${y(d.name)})`);
   const barHeight = Math.min(26,y.bandwidth());

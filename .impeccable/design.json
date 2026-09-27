@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-27T00:00:00Z",
+  "title": "Design System: 诗境",
+  "extensions": {
+    "colorMeta": {
+      "paper": {"role": "neutral", "displayName": "Cool Paper"},
+      "ink": {"role": "neutral", "displayName": "Green-black Ink"},
+      "red": {"role": "primary", "displayName": "Selection Vermilion"},
+      "accent": {"role": "secondary", "displayName": "Seasonal Pigment"}
+    },
+    "typographyMeta": {
+      "display": {"displayName": "Chapter Display", "purpose": "Category heading; 52px at 1100px and 45px at 700px."},
+      "quote": {"displayName": "Poetry Quote", "purpose": "Source verse; 20px/1.9 on mobile."}
+    },
+    "shadows": [],
+    "motion": [
+      {"name": "chart", "value": "700ms d3.easeCubicInOut", "purpose": "Keyed bar positions, widths, and numerical interpolation; zero when paused or reduced."},
+      {"name": "poem", "value": "430ms ease-out", "purpose": "Opacity 0.45 to 1 and translateY 6px to 0."},
+      {"name": "scene", "value": "800ms", "purpose": "Scene background."},
+      {"name": "artwork", "value": "opacity 1s, transform 1.4s, filter 1s", "purpose": "Raster scene changes."},
+      {"name": "control", "value": "200ms", "purpose": "Icon-button hover."},
+      {"name": "toast", "value": "300ms", "purpose": "15px entrance; visible for 2500ms."}
+    ],
+    "breakpoints": [
+      {"name": "mobile-max", "value": "700px"},
+      {"name": "compact-max", "value": "1100px"},
+      {"name": "wide-min", "value": "1600px"}
+    ]
+  },
+  "components": [
+    {
+      "name": "Icon Button", "kind": "button", "refersTo": "icon-button",
+      "description": "Circular native action with accessible name and tooltip.",
+      "html": "<button class=\"ds-icon\" aria-label=\"下载当前分类数据\" title=\"下载当前分类数据\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" aria-hidden=\"true\"><path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3\"/></svg></button>",
+      "css": ".ds-icon{width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:50%;background:transparent;color:var(--ink,#293f3a);cursor:pointer;transition:background .2s,color .2s}.ds-icon:hover{background:#e3e8df;color:var(--red,#a94737)}.ds-icon:focus-visible{outline:2px solid var(--red,#a94737);outline-offset:5px}.ds-icon:disabled{opacity:.4;cursor:default}@media(prefers-reduced-motion:reduce){.ds-icon{transition:none}}"
+    },
+    {
+      "name": "Metric Selector", "kind": "button", "refersTo": "metric",
+      "description": "Underlined comparison metric, controlled through aria-pressed.",
+      "html": "<div class=\"ds-metrics\" role=\"group\" aria-label=\"统计口径\"><button aria-pressed=\"true\">出现次数</button><button aria-pressed=\"false\">涉及篇目</button></div>",
+      "css": ".ds-metrics{display:flex;gap:24px;border-bottom:1px solid #c2c9be}.ds-metrics button{position:relative;border:0;background:none;color:var(--muted,#596862);font:12px -apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC',sans-serif;padding:8px 0 11px;cursor:pointer;white-space:nowrap}.ds-metrics button[aria-pressed=true]{color:var(--ink,#293f3a);font-weight:600}.ds-metrics button[aria-pressed=true]:after{content:'';position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--ink,#293f3a)}.ds-metrics button:focus-visible{outline:2px solid var(--red,#a94737);outline-offset:5px}"
+    },
+    {
+      "name": "Category Navigation", "kind": "nav", "refersTo": "category-selected",
+      "description": "Ruled serif category rows with selected indentation.",
+      "html": "<nav class=\"ds-categories\" aria-label=\"意象分类\"><button aria-pressed=\"true\"><span>四时</span><small>春 · 夏 · 秋 · 冬</small></button><button aria-pressed=\"false\"><span>花木</span><small>一草一木，皆可入诗</small></button></nav>",
+      "css": ".ds-categories{display:flex;flex-direction:column;max-width:280px}.ds-categories button{display:flex;align-items:center;gap:14px;min-height:59px;border:0;border-bottom:1px solid #bbc7b6;background:none;text-align:left;padding:8px 0;color:#3d5248;cursor:pointer;transition:padding .4s,color .3s}.ds-categories span{font:400 22px var(--serif,'Noto Serif SC',serif)}.ds-categories small{font:11px sans-serif;color:#52664e}.ds-categories button[aria-pressed=true]{color:var(--red,#a94737);padding-left:12px}.ds-categories button[aria-pressed=true] span{font-weight:600}.ds-categories button:hover{color:var(--red,#a94737)}.ds-categories button:focus-visible{outline:2px solid var(--red,#a94737);outline-offset:5px}@media(prefers-reduced-motion:reduce){.ds-categories button{transition:none}}"
+    },
+    {
+      "name": "Native Sort", "kind": "input", "refersTo": "sort",
+      "description": "Transparent native sorting select.",
+      "html": "<select class=\"ds-sort\" aria-label=\"排序方式\"><option value=\"desc\">由多到少</option><option value=\"asc\">由少到多</option></select>",
+      "css": ".ds-sort{font:11px -apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC',sans-serif;border:0;background:transparent;color:var(--muted,#596862);cursor:pointer;max-width:108px;padding:8px 0}.ds-sort:focus-visible{outline:2px solid var(--red,#a94737);outline-offset:5px}"
+    },
+    {
+      "name": "Methodology Disclosure", "kind": "custom",
+      "description": "Native inline disclosure with sparse rule and no elevation.",
+      "html": "<details class=\"ds-details\"><summary>关于这卷诗与数据 <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" aria-hidden=\"true\"><path d=\"M12 5v14M5 12h14\"/></svg></summary><p>正文逐字统计，保留原文件篇目边界与文字。</p></details>",
+      "css": ".ds-details{border-top:1px solid var(--line,#cbd1c7);color:var(--muted,#596862);font:12px -apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC',sans-serif}.ds-details summary{display:flex;align-items:center;justify-content:space-between;list-style:none;cursor:pointer;padding:22px 0}.ds-details summary::-webkit-details-marker{display:none}.ds-details[open] summary svg{transform:rotate(45deg)}.ds-details summary:focus-visible{outline:2px solid var(--red,#a94737);outline-offset:5px}.ds-details p{line-height:2.1;margin:0 0 8px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Classical Chinese ink wash, modern interaction.",
+    "overview": "Approved visual world: classical Chinese ink wash, modern interaction. Code-led implementation; no approved image comp. Original raster painting supplies the landscape, never decorative SVG scenery. Main surface mode: Experience with an analytical Operate area and Read poem area.",
+    "keyCharacteristics": ["Sparse rules and continuous unframed landscape", "Serif poetry with system-sans controls", "Linked chart, selected word, scene, and reading states"],
+    "rules": [],
+    "dos": ["Do preserve real raster artwork and vermilion selection.", "Do preserve mobile stacking, keyboard interaction, and reduced motion."],
+    "donts": ["Don't introduce nested cards, shadows, or decorative SVG scenery.", "Don't invent statistical meaning beyond literal counts."]
+  }
+}

@@ -41,6 +41,8 @@ python3 scripts/build_data.py /path/to/全唐诗.txt
 
 `npm test` 校验全部展示诗句与意象匹配、数据引用完整性。Python 单测覆盖异常篇目边界。`node tests/browser.mjs` 用 Playwright 检查桌面与手机交互，并保存本地截图；可设置 `CHROMIUM_PATH` 指定测试浏览器。
 
+`node tests/transition.test.mjs` 自动启动并关闭测试服务器，验证分类切换期间退出的柱形不会误触发旧选项。`node tests/published.mjs` 检查已发布的 HTTPS 网站，可用 `TEST_URL` 和 `TEST_PROXY` 指定地址及网络代理。
+
 ## 素材与依赖
 
 水墨画使用内置 ImageGen 生成，原始提示词见 `public/assets/PROVENANCE.md`。Noto Serif SC 随网站托管，字体授权见 `public/assets/FONT-LICENSE.txt`。图标为 Lucide。为保留作业规定的 D3 v5 同时修复其旧版颜色解析依赖，`d3-color` 固定覆盖为 3.1.0。
