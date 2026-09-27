@@ -22,7 +22,14 @@
     <main>
       <div id="imagery-view" class="view-panel" data-view-panel="imagery" role="tabpanel">
       <section class="world" data-world="seasons" aria-label="唐诗意象探索">
-        <div class="scenery" aria-hidden="true"><img class="landscape-art" src="./assets/landscape.jpg" alt="" /><img class="flower-art" src="./assets/blossom.jpg" alt="" /><div class="sky-disc"></div><canvas id="atmosphere"></canvas></div>
+        <div class="scenery" aria-hidden="true">
+          <img class="scene-art is-active" data-scene="seasons" src="./assets/landscape.jpg" alt="" />
+          <img class="scene-art" data-scene="plants" src="./assets/blossom.jpg" alt="" />
+          <img class="scene-art" data-scene="landscape" src="./assets/landscape-waterfall.jpg" alt="" />
+          <img class="scene-art" data-scene="sky" src="./assets/sky-moon.jpg" alt="" />
+          <img class="scene-art" data-scene="colors" src="./assets/color-pigments.jpg" alt="" />
+          <div class="scene-tint"></div><div class="sky-disc"></div><canvas id="atmosphere"></canvas>
+        </div>
         <div class="world-content">
           <aside class="chapter">
             <div class="chapter-heading"><h2 id="world-title">四时</h2><p id="world-verse">春生夏长<br />秋收冬藏</p></div>

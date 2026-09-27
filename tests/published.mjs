@@ -7,6 +7,8 @@ page.on('pageerror',e=>errors.push(e.message));
 await page.goto(process.env.TEST_URL||'https://yukiasunaaa.github.io/shijing-tang-poetry/',{waitUntil:'networkidle',timeout:60000});
 await page.waitForSelector('.bar-row');
 await page.evaluate(()=>document.fonts.ready);
+assert.equal(await page.locator('.scene-art').count(),5);
+assert.equal(new Set(await page.locator('.scene-art').evaluateAll(images=>images.map(image=>image.currentSrc))).size,5);
 assert.equal(await page.title(),'诗境 · 全唐诗文本图谱');
 assert.equal(await page.locator('.bar-row').count(),4);
 assert.equal(await page.locator('#quote').textContent(),'春眠不觉晓，处处闻啼鸟。');

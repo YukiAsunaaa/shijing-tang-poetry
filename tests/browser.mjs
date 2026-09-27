@@ -9,10 +9,12 @@ for(const [name,width,height] of [['desktop',1440,1000],['mobile',390,844]]){
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
   await page.goto(process.env.TEST_URL||'http://127.0.0.1:5173/');
   await page.waitForSelector('.bar-row');await page.evaluate(()=>document.fonts.ready);await page.waitForTimeout(900);
+  assert.equal(await page.locator('.scene-art').count(),5);assert.equal(new Set(await page.locator('.scene-art').evaluateAll(images=>images.map(image=>image.currentSrc))).size,5);
   assert.equal(await page.locator('.bar-row').count(),4);
   await page.screenshot({path:`.review/${name}.png`,fullPage:true});
   for(const category of ['plants','landscape','sky','colors','seasons']){
-    await page.locator(`[data-category="${category}"]`).click();await page.waitForTimeout(750);
+    await page.locator(`[data-category="${category}"]`).click();await page.waitForTimeout(950);
+    assert.ok(await page.locator(`[data-scene="${category}"]`).evaluate(image=>image.classList.contains('is-active')&&image.complete&&image.naturalWidth>100));
     assert.equal(await page.locator('.world').getAttribute('data-world'),category);
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,`overflow ${name} ${category}`);
     const first=page.locator('.bar-row').first();await first.focus();await page.keyboard.press('Enter');
@@ -25,15 +27,18 @@ for(const [name,width,height] of [['desktop',1440,1000],['mobile',390,844]]){
   const before=await page.locator('#poem-source').textContent();await page.locator('#next-poem').click();assert.notEqual(await page.locator('#poem-source').textContent(),before);
   const download=page.waitForEvent('download');await page.locator('#download').click();assert.ok((await download).suggestedFilename().endsWith('.csv'));
   await page.waitForFunction(()=>!document.querySelector('#toast')?.classList.contains('visible'));
-  await page.locator('#motion').click();assert.equal(await page.locator('#motion').getAttribute('aria-pressed'),'true');
+  await page.locator('#motion').click();assert.equal(await page.locator('#motion').getAttribute('aria-pressed'),'true');assert.equal(await page.evaluate(()=>document.getAnimations().some(animation=>animation.playState==='running')),false);
   const a=await page.locator('canvas').evaluate(c=>c.toDataURL());await page.waitForTimeout(120);const b=await page.locator('canvas').evaluate(c=>c.toDataURL());assert.equal(a,b);
   await page.locator('#motion').click();await page.waitForTimeout(120);const c=await page.locator('canvas').evaluate(c=>c.toDataURL());assert.notEqual(a,c);
   await page.locator('#method summary').click();assert.ok(await page.locator('#method-text').isVisible());
   await page.locator('[data-view="emotion"]').click();await page.waitForSelector('.radar-shape');await page.waitForTimeout(700);
   assert.ok(await page.locator('#poet-list button').count()>100);
+  await page.locator('.emotion-rank').first().evaluate(element=>element.dataset.persistence='kept');
   await page.locator('#poet-search').fill('李白');await page.locator('#poet-list button').first().click();
   assert.equal(await page.locator('#emotion-poet').textContent(),'李白');assert.equal(await page.locator('.emotion-rank').count(),6);
+  assert.equal(await page.locator('.emotion-rank').first().getAttribute('data-persistence'),'kept');
   await page.locator('.radar-node').nth(1).click();assert.match(await page.locator('#emotion-quote').textContent(),/李白/);
+  await page.waitForTimeout(850);
   await page.screenshot({path:`.review/${name}-emotion.png`,fullPage:true});
   await page.locator('[data-view="cluster"]').click();await page.waitForSelector('.poet-point');await page.waitForTimeout(700);
   assert.ok(await page.locator('.poet-point').count()>100);await page.locator('#cluster-search').fill('杜甫');

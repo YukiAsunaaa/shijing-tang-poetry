@@ -2,6 +2,7 @@ import * as d3 from 'd3';
 
 const fmt = n => n.toLocaleString('zh-CN');
 const clusterColors = ['#a94737','#3f716b','#806286','#a38c41','#526b84','#627a52'];
+const emotionColors = {喜悦:'#b54c38',哀愁:'#587187',思念:'#9a7640',孤寂:'#66726f',旷达:'#547663',壮志:'#9b4035'};
 
 export async function initAdvancedAnalysis({icons,createIcons,notify,reduced,paused}) {
   const $ = selector => document.querySelector(selector);
@@ -75,12 +76,24 @@ export async function initAdvancedAnalysis({icons,createIcons,notify,reduced,pau
   $('#poet-search').addEventListener('input',event=>renderPoetList(event.target.value));
   $('#poet-search').addEventListener('keydown',event=>{if(event.key==='Enter'){const first=$('#poet-list button');if(first){event.preventDefault();first.click();}}});
 
+  function animateLocal(element,keyframes,options={}) {
+    if (!element || reduced.matches || paused()) return;
+    element.getAnimations().forEach(animation=>animation.cancel());
+    element.animate(keyframes,{duration:options.duration||520,easing:'cubic-bezier(.16,1,.3,1)',fill:'both',...options});
+  }
+
   function selectPoet(name) {
     const poet=data.sentiment.find(row=>row.author===name);if(!poet)return;
+    const changed=selectedPoet&&selectedPoet!==name;
     selectedPoet=name;selectedEmotion=poet.dominant;
     document.querySelectorAll('#poet-list button').forEach(button=>button.setAttribute('aria-selected',button.dataset.poet===name));
     $('#emotion-poet').textContent=poet.author;
     $('#emotion-sample').textContent=`${fmt(poet.poems)} 条篇目 · ${fmt(poet.characters)} 字 · 主要倾向：${poet.dominant}`;
+    $('.emotion-stage').style.setProperty('--emotion-accent',emotionColors[poet.dominant]);
+    if(changed){
+      animateLocal($('#emotion-poet'),[{opacity:.18,filter:'blur(5px)',transform:'translateY(12px)',clipPath:'inset(0 0 85% 0)'},{opacity:1,filter:'blur(0)',transform:'translateY(0)',clipPath:'inset(0 0 0 0)'}],{duration:560});
+      animateLocal($('#emotion-sample'),[{opacity:0,transform:'translateY(7px)'},{opacity:1,transform:'translateY(0)'}],{duration:440,delay:70});
+    }
     renderEmotionRadar(poet);renderEmotionRanks(poet);renderEmotionEvidence(poet,selectedEmotion);
   }
 
@@ -92,27 +105,35 @@ export async function initAdvancedAnalysis({icons,createIcons,notify,reduced,pau
     const svg=d3.select(host).selectAll('svg').data([null]).join('svg').attr('viewBox',`0 0 ${size} ${size}`).attr('role','img').attr('aria-label',`${poet.author}六类情感表达轮廓`);
     const rings=svg.selectAll('.radar-ring').data([.25,.5,.75,1]);rings.join('circle').attr('class','radar-ring').attr('cx',center).attr('cy',center).attr('r',d=>radius*d);
     const axes=svg.selectAll('.radar-axis').data(data.emotions);axes.join('line').attr('class','radar-axis').attr('x1',center).attr('y1',center).attr('x2',(d,i)=>center+Math.cos(angle(i))*radius).attr('y2',(d,i)=>center+Math.sin(angle(i))*radius);
-    const polygon=svg.selectAll('.radar-shape').data([points]);polygon.join('path').attr('class','radar-shape').transition().duration(reduced.matches||paused()?0:650).ease(d3.easeCubicOut).attr('d',d3.line().curve(d3.curveCardinalClosed.tension(.55)));
+    const polygon=svg.selectAll('.radar-shape').data([points]);polygon.join('path').attr('class','radar-shape').interrupt().transition().duration(reduced.matches||paused()?0:680).ease(d3.easeCubicOut).attr('d',d3.line().curve(d3.curveCardinalClosed.tension(.55)));
     const nodes=svg.selectAll('.radar-node').data(data.emotions,d=>d);const enter=nodes.enter().append('g').attr('class','radar-node').attr('role','button').attr('tabindex',0);
     enter.append('circle').attr('r',5);enter.append('text').attr('text-anchor','middle').attr('dominant-baseline','middle');
     const merged=enter.merge(nodes).classed('selected',d=>d===selectedEmotion).attr('aria-label',d=>`${d}：每万字 ${poet.scores[d]} 次`).on('click',emotion=>{selectedEmotion=emotion;renderEmotionEvidence(poet,emotion);renderEmotionRanks(poet);renderEmotionRadar(poet);}).on('keydown',emotion=>{if(['Enter',' '].includes(d3.event.key)){d3.event.preventDefault();selectedEmotion=emotion;renderEmotionEvidence(poet,emotion);renderEmotionRanks(poet);renderEmotionRadar(poet);}});
-    merged.transition().duration(reduced.matches||paused()?0:650).attr('transform',(d,i)=>`translate(${points[i][0]},${points[i][1]})`);
+    merged.interrupt().transition().duration(reduced.matches||paused()?0:680).ease(d3.easeCubicOut).attr('transform',(d,i)=>`translate(${points[i][0]},${points[i][1]})`);
     merged.select('text').attr('x',(d,i)=>Math.cos(angle(i))*35).attr('y',(d,i)=>Math.sin(angle(i))*27).text(d=>d);
     nodes.exit().remove();
   }
 
   function renderEmotionRanks(poet) {
     const max=d3.max(data.emotions.map(e=>poet.scores[e]))||1;
-    const host=$('#emotion-ranks');host.replaceChildren();
-    data.emotions.forEach(emotion=>{
-      const button=document.createElement('button');button.type='button';button.className='emotion-rank';button.setAttribute('aria-pressed',emotion===selectedEmotion);button.innerHTML=`<span>${emotion}</span><span class="rank-track"><i style="width:${poet.scores[emotion]/max*100}%"></i></span><strong>${poet.scores[emotion].toFixed(1)}</strong>`;button.addEventListener('click',()=>{selectedEmotion=emotion;renderEmotionEvidence(poet,emotion);renderEmotionRanks(poet);renderEmotionRadar(poet);});host.append(button);
-    });
+    const values=data.emotions.map(emotion=>({emotion,value:poet.scores[emotion]}));
+    const rows=d3.select('#emotion-ranks').selectAll('.emotion-rank').data(values,d=>d.emotion);
+    const enter=rows.enter().append('button').attr('type','button').attr('class','emotion-rank').style('opacity',0).on('click',item=>{const current=data.sentiment.find(row=>row.author===selectedPoet);selectedEmotion=item.emotion;renderEmotionEvidence(current,item.emotion);renderEmotionRanks(current);renderEmotionRadar(current);});
+    enter.append('span').attr('class','rank-label');enter.append('span').attr('class','rank-track').append('i').style('width','0%');enter.append('strong').text('0.0');
+    const all=enter.merge(rows).attr('aria-pressed',item=>item.emotion===selectedEmotion);
+    all.select('.rank-label').text(item=>item.emotion);
+    all.interrupt().transition().duration(reduced.matches||paused()?0:360).delay((d,i)=>reduced.matches||paused()?0:i*24).style('opacity',1);
+    all.select('.rank-track i').interrupt().transition().duration(reduced.matches||paused()?0:620).delay((d,i)=>reduced.matches||paused()?0:i*34).ease(d3.easeCubicOut).style('width',item=>`${item.value/max*100}%`);
+    all.select('strong').interrupt().transition().duration(reduced.matches||paused()?0:560).delay((d,i)=>reduced.matches||paused()?0:i*30).tween('text',function(item){const start=Number(this.textContent)||0;const interpolate=d3.interpolateNumber(start,item.value);return t=>this.textContent=interpolate(t).toFixed(1);});
+    rows.exit().remove();
   }
 
   function renderEmotionEvidence(poet,emotion) {
     const evidence=poet.evidence[emotion];$('#emotion-name').textContent=emotion;$('#emotion-score').textContent=`每万字 ${poet.scores[emotion].toFixed(1)} 次`;
     $('#emotion-terms').replaceChildren(...evidence.terms.map(item=>{const span=document.createElement('span');span.textContent=`${item.term} ${item.count}`;return span;}));
     $('#emotion-quote').textContent=`“${evidence.poem.excerpt}”\n${poet.author}《${evidence.poem.title}》`;
+    animateLocal($('.emotion-evidence'),[{opacity:.28,filter:'blur(3px)',clipPath:'inset(0 0 55% 0)'},{opacity:1,filter:'blur(0)',clipPath:'inset(0 0 0 0)'}],{duration:480,delay:80});
+    document.querySelectorAll('#emotion-terms span').forEach((term,index)=>animateLocal(term,[{opacity:0,transform:'translateX(-7px)'},{opacity:1,transform:'translateX(0)'}],{duration:340,delay:120+index*35}));
   }
 
   $('#emotion-download').addEventListener('click',()=>{
@@ -150,5 +171,6 @@ export async function initAdvancedAnalysis({icons,createIcons,notify,reduced,pau
 
   $('#cluster-search').addEventListener('input',event=>{const query=event.target.value.trim();if(!query)return;const match=data.poets.find(p=>p.author.includes(query));if(match){selectedCluster=null;renderLegend();renderCluster();selectClusterPoet(match);}});
   $('#cluster-search').addEventListener('keydown',event=>{if(event.key==='Enter'){const match=data.poets.find(p=>p.author.includes(event.target.value.trim()));if(match)selectClusterPoet(match);}});
+  document.addEventListener('poetry:motionchange',event=>{if(!event.detail.paused||!data)return;d3.select('#emotion-view').selectAll('*').interrupt();d3.select('#cluster-view').selectAll('*').interrupt();if(selectedPoet){const poet=data.sentiment.find(row=>row.author===selectedPoet);renderEmotionRadar(poet);renderEmotionRanks(poet);renderEmotionEvidence(poet,selectedEmotion);}});
   let resizeTimer;new ResizeObserver(()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{if(lastView==='cluster'&&data)renderCluster();if(lastView==='emotion'&&data&&selectedPoet)renderEmotionRadar(data.sentiment.find(p=>p.author===selectedPoet));},100);}).observe(document.querySelector('main'));
 }

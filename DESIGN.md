@@ -121,7 +121,7 @@ Chart width follows its column, with a 240px computational minimum. D3 margins a
 
 ## Elevation & Depth
 
-No box shadows. Depth comes from raster transparency, multiply blending, masks, atmospheric canvas, hairlines, and tonal changes. Landscape opacity varies by category and season. Plants artwork occupies the left 45% on desktop with a fading mask; mobile expands it to full width at 19% opacity. The isolated scene keeps controls above imagery. Toast is fixed at z-index 20 without shadow.
+No box shadows. Depth comes from raster transparency, multiply blending, masks, atmospheric canvas, hairlines, and tonal changes. Every imagery category owns a separate original raster scene: valley for seasons, blossom branch for plants, monumental waterfall for landscape, moonlit cloud field for sky, and mineral-pigment shanshui for colors. Term selection changes crop, filter, pigment, weather, and atmospheric motion. Mobile uses quieter opacity and category-specific focal positions. The isolated scene keeps controls above imagery. Toast is fixed at z-index 20 without shadow.
 
 ## Shapes
 
@@ -149,9 +149,9 @@ The top tablist is a compact text control with small descriptive subtitles and k
 
 Focus-visible outline is 2px vermilion with 5px offset for native controls and focusable elements; SVG rows use the hit-rectangle outline. The skip link becomes visible on focus.
 
-Signature: keyed D3 transitions preserve bar identity while positions, widths and counts change. Scene crossfade with category-specific canvas motion (ripples, falling petals/leaves, snow/rain, pigment rings) and bitmap parallax. Selected term changes scene season/weather/color. Main transitions 700ms cubic easing; reduced motion removes animation. Motion switch always accessible.
+Signature: keyed D3 transitions preserve bar identity while positions, widths and counts change. Category changes reveal a new master painting through an 880ms clipped ink-wash entrance while the prior painting exits faster; term changes adjust crop and atmosphere within the same scene. Canvas motion includes ripples, mist bands, falling petals/leaves, cloud drift, rain/snow, stars, and blurred pigment currents. Poet changes preserve the same radar nodes and frequency rows: geometry, widths, colors, and numbers interpolate while headings and evidence use local ink reveals. Main transitions use cubic deceleration; reduced motion removes spatial movement. Motion switch always accessible.
 
-Exact motion: D3 uses `easeCubicInOut` at 700ms; exit fade takes one third of that. Poetry fades from opacity 0.45 and translates from 6px over 430ms ease-out. Scene background takes 800ms; artwork opacity/filter 1s and transform 1.4s. Category padding/arrow movement takes 400ms, color 300ms. Toast moves 15px over 300ms. Motion pause removes CSS transitions/animations, sets D3 duration to zero, and stops canvas playback. Reduced motion also disables smooth scrolling; hidden documents stop the animation loop.
+Exact motion: imagery D3 bars use `easeCubicInOut` at 700ms; exit fade takes one third of that. Poetry fades from opacity 0.45 and translates from 6px over 430ms. New scene artwork reveals over 880ms with a clipped, blurred entrance and 420ms exit; term focus changes settle over 620ms. Emotion radar and frequency bars interpolate over 620–680ms with a capped 34ms row stagger; evidence resolves over 480ms. Category padding/arrow movement takes 400ms, color 300ms. Toast moves 15px over 300ms. Motion pause removes CSS transitions/animations, sets D3 duration to zero, and stops canvas playback. Reduced motion also disables smooth scrolling; hidden documents stop the animation loop.
 
 ## Do's and Don'ts
 
